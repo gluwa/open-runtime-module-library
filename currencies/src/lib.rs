@@ -39,6 +39,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![allow(clippy::unused_unit)]
 
+use codec::Codec;
 use frame_support::{
 	pallet_prelude::*,
 	traits::{
@@ -56,7 +57,6 @@ use orml_traits::{
 	NamedBasicReservableCurrency, NamedMultiReservableCurrency,
 };
 use orml_utilities::with_transaction_result;
-use parity_scale_codec::Codec;
 use sp_runtime::{
 	traits::{CheckedSub, MaybeSerializeDeserialize, StaticLookup, Zero},
 	DispatchError, DispatchResult,
@@ -695,7 +695,7 @@ where
 		+ MaybeSerializeDeserialize
 		+ Debug
 		+ Default
-		+ parity_scale_codec::MaxEncodedLen,
+		+ codec::MaxEncodedLen,
 	Currency: PalletCurrency<AccountId>,
 	T: Config,
 {

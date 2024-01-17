@@ -22,19 +22,7 @@ pub mod teleport_currency_adapter;
 pub const ALICE: AccountId32 = AccountId32::new([0u8; 32]);
 pub const BOB: AccountId32 = AccountId32::new([1u8; 32]);
 
-#[derive(
-	Encode,
-	Decode,
-	Eq,
-	PartialEq,
-	Copy,
-	Clone,
-	RuntimeDebug,
-	PartialOrd,
-	Ord,
-	parity_scale_codec::MaxEncodedLen,
-	TypeInfo,
-)]
+#[derive(Encode, Decode, Eq, PartialEq, Copy, Clone, RuntimeDebug, PartialOrd, Ord, codec::MaxEncodedLen, TypeInfo)]
 #[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
 pub enum CurrencyId {
 	/// Relay chain token.
@@ -367,8 +355,6 @@ impl WeightTrader for AllTokensAreCreatedEqualToWeight {
 /// in the Holding Register to pay for execution. This is almost equal to
 /// [`xcm_builder::AllowTopLevelPaidExecutionFrom<T>`] except that it allows for
 /// multiple assets and is not generic to allow all origins.
-/// This is necessary after the change in `polkadot-sdk` which prevents
-/// multicurrency transfers. Here is the relevant issue: https://github.com/paritytech/polkadot-sdk/issues/1638
 pub struct AllowTopLevelPaidExecution;
 impl ShouldExecute for AllowTopLevelPaidExecution {
 	fn should_execute<RuntimeCall>(

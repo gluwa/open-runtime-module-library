@@ -3,13 +3,13 @@
 #![cfg(test)]
 
 use super::*;
+use codec::{Decode, Encode};
 use frame_support::{
 	parameter_types,
 	traits::{ConstU64, EqualPrivilegeOnly, Everything},
 	weights::Weight,
 };
 use frame_system::{ensure_root, ensure_signed, EnsureRoot};
-use parity_scale_codec::{Decode, Encode};
 use sp_core::H256;
 use sp_runtime::{
 	traits::{BadOrigin, IdentityLookup},
@@ -57,7 +57,8 @@ impl pallet_preimage::Config for Runtime {
 	type WeightInfo = ();
 	type Currency = ();
 	type ManagerOrigin = EnsureRoot<u128>;
-	type Consideration = ();
+	type BaseDeposit = ();
+	type ByteDeposit = ();
 }
 
 parameter_types! {

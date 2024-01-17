@@ -3,33 +3,38 @@ name = "orml-vesting"
 description = "Provides scheduled balance locking mechanism, in a *graded vesting* way."
 repository = "https://github.com/open-web3-stack/open-runtime-module-library/tree/master/vesting"
 license = "Apache-2.0"
-version = "0.6.7"
+version = "0.4.1-dev"
 authors = ["Laminar Developers <hello@laminar.one>"]
 edition = "2021"
 
 [dependencies]
-parity-scale-codec = {  version = "3.0.0", default-features = false, features = ["max-encoded-len"] }
-scale-info = { workspace = true }
-serde = { workspace = true, optional = true }
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [
+	"max-encoded-len",
+] }
+scale-info = { version = "2.9.0", default-features = false, features = [
+	"derive",
+] }
+serde = { version = "1.0.136", optional = true }
 
-frame-support = { workspace = true }
-frame-system = { workspace = true }
-sp-io = { workspace = true }
-sp-runtime = { workspace = true }
-sp-std = { workspace = true }
+frame-support = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+frame-system = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+sp-io = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+sp-runtime = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+sp-std = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
 
 [dev-dependencies]
-pallet-balances = { workspace = true, features = ["std"] }
-sp-core = { workspace = true, features = ["std"] }
+pallet-balances = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
+sp-core = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
 
 [features]
-default = [ "std" ]
+default = ["std"]
 std = [
+	"serde",
+
+	"codec/std",
 	"frame-support/std",
 	"frame-system/std",
-	"parity-scale-codec/std",
 	"scale-info/std",
-	"serde",
 	"sp-io/std",
 	"sp-runtime/std",
 	"sp-std/std",
@@ -39,8 +44,4 @@ runtime-benchmarks = [
 	"frame-system/runtime-benchmarks",
 	"sp-runtime/runtime-benchmarks",
 ]
-try-runtime = [
-	"frame-support/try-runtime",
-	"frame-system/try-runtime",
-	"sp-runtime/try-runtime",
-]
+try-runtime = ["frame-support/try-runtime", "frame-system/try-runtime"]

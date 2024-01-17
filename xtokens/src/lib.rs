@@ -520,31 +520,20 @@ pub mod module {
 				T::MultiLocationsFilter::contains(&dest),
 				Error::<T>::NotSupportedMultiLocation
 			);
-
-			// Fee payment can only be made by using the non-zero amount of fungibles
-			ensure!(
-				matches!(fee.fun, Fungibility::Fungible(x) if !x.is_zero()),
-				Error::<T>::InvalidAsset
-			);
-
 			let origin_location = T::AccountIdToMultiLocation::convert(who.clone());
 
 			let mut non_fee_reserve: Option<MultiLocation> = None;
 			let asset_len = assets.len();
 			for i in 0..asset_len {
 				let asset = assets.get(i).ok_or(Error::<T>::AssetIndexNonExistent)?;
-
-				match asset.fun {
-					Fungibility::Fungible(x) => ensure!(!x.is_zero(), Error::<T>::InvalidAsset),
-					Fungibility::NonFungible(AssetInstance::Undefined) => return Err(Error::<T>::InvalidAsset.into()),
-					_ => {}
-				}
-
+				ensure!(
+					matches!(asset.fun, Fungibility::Fungible(x) if !x.is_zero()),
+					Error::<T>::InvalidAsset
+				);
 				// `assets` includes fee, the reserve location is decided by non fee asset
-				if non_fee_reserve.is_none() && asset.id != fee.id {
+				if (fee != *asset && non_fee_reserve.is_none()) || asset_len == 1 {
 					non_fee_reserve = T::ReserveProvider::reserve(asset);
 				}
-
 				// make sure all non fee assets share the same reserve
 				if non_fee_reserve.is_some() {
 					ensure!(
@@ -555,7 +544,7 @@ pub mod module {
 			}
 
 			let fee_reserve = T::ReserveProvider::reserve(&fee);
-			if asset_len > 1 && fee_reserve != non_fee_reserve {
+			if fee_reserve != non_fee_reserve {
 				// Current only support `ToReserve` with relay-chain asset as fee. other case
 				// like `NonReserve` or `SelfReserve` with relay-chain fee is not support.
 				ensure!(non_fee_reserve == dest.chain_part(), Error::<T>::InvalidAsset);
@@ -621,7 +610,7 @@ pub mod module {
 					origin_location,
 					assets.clone(),
 					fee.clone(),
-					fee_reserve,
+					non_fee_reserve,
 					&dest,
 					None,
 					dest_weight_limit,
@@ -735,12 +724,14 @@ pub mod module {
 		) -> Result<Xcm<T::RuntimeCall>, DispatchError> {
 			let mut reanchored_dest = dest;
 			if reserve == MultiLocation::parent() {
-				if let MultiLocation {
-					parents: 1,
-					interior: X1(Parachain(id)),
-				} = dest
-				{
-					reanchored_dest = Parachain(id).into();
+				match dest {
+					MultiLocation {
+						parents,
+						interior: X1(Parachain(id)),
+					} if parents == 1 => {
+						reanchored_dest = Parachain(id).into();
+					}
+					_ => {}
 				}
 			}
 

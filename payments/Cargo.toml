@@ -2,7 +2,7 @@
 authors = ["Virto Network <we@virto.team>"]
 edition = '2021'
 name = "orml-payments"
-version = "0.6.7"
+version = "0.4.1-dev"
 license = "Apache-2.0"
 homepage = "https://github.com/virto-network/virto-node"
 repository = "https://github.com/virto-network/virto-node"
@@ -10,39 +10,38 @@ description = "Allows users to post escrow payment on-chain"
 readme = "README.md"
 
 [dependencies]
-parity-scale-codec = { workspace = true }
-log = { workspace = true }
-scale-info = { workspace = true }
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }
+log = { version = "0.4.20", default-features = false }
+scale-info = { version = "2.9.0", default-features = false, features = [
+	"derive",
+] }
 
-frame-support = { workspace = true }
-frame-system = { workspace = true }
-sp-runtime = { workspace = true }
-sp-std = { workspace = true }
+frame-support = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+frame-system = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+sp-runtime = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+sp-std = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
 
-orml-traits = {path = "../traits", version = "0.6.7", default-features = false }
+orml-traits = { path = "../traits", version = "0.4.1-dev", default-features = false }
 
 [dev-dependencies]
 serde = "1.0.136"
 
-sp-core = { workspace = true }
-sp-io = { workspace = true }
+sp-core = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+sp-io = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
 
-orml-tokens = { path = "../tokens", default-features = false }
+orml-tokens = { path = "../tokens", version = "0.4.1-dev", default-features = false }
 
 [features]
-default = [ 'std' ]
+default = ['std']
 std = [
+	'codec/std',
 	'frame-support/std',
 	'frame-system/std',
 	'log/std',
+	'orml-tokens/std',
 	'orml-traits/std',
-	'parity-scale-codec/std',
 	'scale-info/std',
 	'sp-runtime/std',
 	'sp-std/std',
 ]
-try-runtime = [
-	"frame-support/try-runtime",
-	"frame-system/try-runtime",
-	"sp-runtime/try-runtime",
-]
+try-runtime = ["frame-support/try-runtime", "frame-system/try-runtime"]

@@ -1,10 +1,9 @@
 use crate::{arithmetic, Happened};
-use frame_support::traits::tokens::Balance;
+use codec::{Codec, FullCodec, MaxEncodedLen};
 pub use frame_support::{
 	traits::{BalanceStatus, DefensiveSaturating, LockIdentifier},
 	transactional,
 };
-use parity_scale_codec::{Codec, FullCodec, MaxEncodedLen};
 use sp_runtime::{
 	traits::{AtLeast32BitUnsigned, MaybeSerializeDeserialize},
 	DispatchError, DispatchResult,
@@ -28,7 +27,14 @@ pub trait MultiCurrency<AccountId> {
 		+ MaxEncodedLen;
 
 	/// The balance of an account.
-	type Balance: Balance;
+	type Balance: AtLeast32BitUnsigned
+		+ FullCodec
+		+ Copy
+		+ MaybeSerializeDeserialize
+		+ Debug
+		+ Default
+		+ scale_info::TypeInfo
+		+ MaxEncodedLen;
 
 	// Public immutables
 

@@ -5,10 +5,7 @@
 use super::*;
 use frame_support::{
 	construct_runtime, parameter_types,
-	traits::{
-		tokens::{PayFromAccount, UnityAssetBalanceConversion},
-		ChangeMembers, ConstU32, ConstU64, ContainsLengthBound, Everything, SortedMembers,
-	},
+	traits::{ChangeMembers, ConstU32, ConstU64, ContainsLengthBound, Everything, SortedMembers},
 	PalletId,
 };
 use orml_traits::parameter_type_with_key;
@@ -102,10 +99,13 @@ impl ContainsLengthBound for TenToFourteen {
 
 parameter_types! {
 	pub const ProposalBond: Permill = Permill::from_percent(5);
+	pub const ProposalBondMinimum: u64 = 1;
+	pub const ProposalBondMaximum: u64 = 5;
+	pub const SpendPeriod: u64 = 2;
 	pub const Burn: Permill = Permill::from_percent(50);
 	pub const TreasuryPalletId: PalletId = PalletId(*b"py/trsry");
 	pub const GetTokenId: CurrencyId = DOT;
-	pub TreasuryAccount: AccountId = Treasury::account_id();
+	pub const MaxApprovals: u32 = 100;
 }
 
 pub type MockCurrencyAdapter = CurrencyAdapter<Runtime, GetTokenId>;
@@ -117,23 +117,15 @@ impl pallet_treasury::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type OnSlash = ();
 	type ProposalBond = ProposalBond;
-	type ProposalBondMinimum = ConstU64<1>;
-	type ProposalBondMaximum = ();
-	type SpendPeriod = ConstU64<2>;
+	type ProposalBondMinimum = ProposalBondMinimum;
+	type ProposalBondMaximum = ProposalBondMaximum;
+	type SpendPeriod = SpendPeriod;
 	type Burn = Burn;
-	type BurnDestination = (); // Just gets burned.
-	type WeightInfo = ();
+	type BurnDestination = ();
 	type SpendFunds = ();
-	type MaxApprovals = ConstU32<100>;
-	type SpendOrigin = frame_support::traits::NeverEnsureOrigin<u64>;
-	type AssetKind = ();
-	type Beneficiary = Self::AccountId;
-	type BeneficiaryLookup = IdentityLookup<Self::Beneficiary>;
-	type Paymaster = PayFromAccount<MockCurrencyAdapter, TreasuryAccount>;
-	type BalanceConverter = UnityAssetBalanceConversion;
-	type PayoutPeriod = ConstU64<10>;
-	#[cfg(feature = "runtime-benchmarks")]
-	type BenchmarkHelper = ();
+	type WeightInfo = ();
+	type MaxApprovals = MaxApprovals;
+	type SpendOrigin = frame_support::traits::NeverEnsureOrigin<Balance>;
 }
 
 thread_local! {

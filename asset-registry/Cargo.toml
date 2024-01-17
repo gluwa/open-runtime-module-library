@@ -3,75 +3,72 @@ name = "orml-asset-registry"
 description = "Registry for (foreign) assets"
 repository = "https://github.com/open-web3-stack/open-runtime-module-library/tree/master/asset-registry"
 license = "Apache-2.0"
-version = "0.6.7"
+version = "0.4.1-dev"
 authors = ["Interlay Ltd, etc"]
 edition = "2021"
 
 [dependencies]
-log = { workspace = true }
-scale-info = { workspace = true }
-serde = { workspace = true, optional = true }
-parity-scale-codec = { workspace = true }
+log = { version = "0.4.20", default-features = false }
+scale-info = { version = "2.9.0", default-features = false, features = [
+	"derive",
+] }
+serde = { version = "1.0.136", optional = true }
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [
+	"max-encoded-len",
+] }
 
 # substrate
-frame-support = { workspace = true }
-frame-system = { workspace = true }
-sp-io = { workspace = true }
-sp-runtime = { workspace = true }
-sp-std = { workspace = true }
+frame-support = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+frame-system = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+sp-io = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+sp-runtime = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+sp-std = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
 
 # polkadot
-pallet-xcm = { workspace = true }
-xcm = { workspace = true }
-xcm-builder = { workspace = true }
-xcm-executor = { workspace = true }
+pallet-xcm = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+xcm = { package = "staging-xcm", git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+xcm-builder = { package = "staging-xcm-builder", git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+xcm-executor = { package = "staging-xcm-executor", git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
 
 # orml
-orml-traits = { path = "../traits", version = "0.6.7", default-features = false }
-
-# for runtime-benchmarks
-polkadot-runtime-common = { workspace = true, optional = true }
+orml-traits = { path = "../traits", version = "0.4.1-dev", default-features = false }
 
 [dev-dependencies]
 # substrate
-pallet-balances = { workspace = true, features = ["std"] }
-sp-core = { workspace = true, features = ["std"] }
-sp-io = { workspace = true, features = ["std"] }
-pallet-message-queue = { workspace = true, features = ["std"] }
+pallet-balances = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
+sp-core = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
+sp-io = { git = "https://github.com/gluwa/polkadot-sdk", default-features = false, branch = "release-polkadot-v1.1.0-patch" }
+pallet-message-queue = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
 
 # cumulus
-cumulus-primitives-core = { workspace = true, features = ["std"] }
-cumulus-pallet-dmp-queue = { workspace = true, features = ["std"] }
-cumulus-pallet-xcmp-queue = { workspace = true, features = ["std"] }
-cumulus-pallet-xcm = { workspace = true, features = ["std"] }
-cumulus-pallet-parachain-system = { workspace = true, features = ["std"] }
-parachain-info = { workspace = true, features = ["std"] }
+cumulus-primitives-core = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
+cumulus-pallet-dmp-queue = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
+cumulus-pallet-xcmp-queue = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
+cumulus-pallet-xcm = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
+parachain-info = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
 
 # polkadot
-polkadot-parachain-primitives = { workspace = true, features = ["std"] }
-polkadot-runtime-parachains = { workspace = true, features = ["std"] }
-polkadot-runtime-common = { workspace = true, features = ["std"] }
-xcm-simulator = { workspace = true }
+polkadot-parachain = { package = "polkadot-parachain-primitives", git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
+polkadot-runtime-parachains = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
+xcm-simulator = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
 
 # orml
 orml-tokens = { path = "../tokens" }
 orml-xcm = { path = "../xcm" }
-orml-xcm-support = { path = "../xcm-support" }
+orml-xcm-support = { path = "../xcm-support", default-features = false }
 orml-xtokens = { path = "../xtokens" }
 
 [features]
-default = [ "std" ]
+default = ["std"]
 std = [
+	"serde",
+
+	"codec/std",
 	"frame-support/std",
 	"frame-system/std",
-	"log/std",
 	"orml-traits/std",
 	"pallet-xcm/std",
-	"parity-scale-codec/std",
-	"polkadot-runtime-common?/std",
 	"scale-info/std",
-	"serde",
-	"sp-io/std",
 	"sp-runtime/std",
 	"sp-std/std",
 	"xcm-builder/std",
@@ -82,7 +79,6 @@ runtime-benchmarks = [
 	"frame-support/runtime-benchmarks",
 	"frame-system/runtime-benchmarks",
 	"pallet-xcm/runtime-benchmarks",
-	"polkadot-runtime-common/runtime-benchmarks",
 	"sp-runtime/runtime-benchmarks",
 	"xcm-builder/runtime-benchmarks",
 	"xcm-executor/runtime-benchmarks",
@@ -91,6 +87,4 @@ try-runtime = [
 	"frame-support/try-runtime",
 	"frame-system/try-runtime",
 	"pallet-xcm/try-runtime",
-	"polkadot-runtime-common?/try-runtime",
-	"sp-runtime/try-runtime",
 ]

@@ -2,8 +2,8 @@ use super::{Amount, Balance, CurrencyId, CurrencyIdConvert, ParachainXcmRouter};
 
 use crate as orml_asset_registry;
 
-use cumulus_pallet_parachain_system::AnyRelayNumber;
-use cumulus_primitives_core::ParaId;
+use codec::{Decode, Encode, MaxEncodedLen};
+use cumulus_primitives_core::{ChannelStatus, GetChannelInfo, ParaId};
 use frame_support::traits::{EnsureOrigin, EnsureOriginWithArg};
 use frame_support::{
 	construct_runtime, match_types, ord_parameter_types, parameter_types,
@@ -19,9 +19,7 @@ use orml_traits::{
 };
 use orml_xcm_support::{IsNativeConcrete, MultiCurrencyAdapter, MultiNativeAsset};
 use pallet_xcm::XcmPassthrough;
-use parity_scale_codec::{Decode, Encode, MaxEncodedLen};
-use polkadot_parachain_primitives::primitives::Sibling;
-use polkadot_runtime_common::xcm_sender::NoPriceForMessageDelivery;
+use polkadot_parachain::primitives::Sibling;
 use sp_core::H256;
 use sp_runtime::{
 	traits::{AccountIdConversion, Convert, IdentityLookup},
@@ -59,7 +57,7 @@ impl frame_system::Config for Runtime {
 	type BaseCallFilter = Everything;
 	type SystemWeightInfo = ();
 	type SS58Prefix = ();
-	type OnSetCode = cumulus_pallet_parachain_system::ParachainSetCode<Runtime>;
+	type OnSetCode = ();
 	type MaxConsumers = ConstU32<16>;
 }
 
@@ -74,7 +72,6 @@ impl pallet_balances::Config for Runtime {
 	type MaxReserves = ConstU32<50>;
 	type ReserveIdentifier = [u8; 8];
 	type RuntimeHoldReason = RuntimeHoldReason;
-	type RuntimeFreezeReason = RuntimeFreezeReason;
 	type FreezeIdentifier = [u8; 8];
 	type MaxHolds = ();
 	type MaxFreezes = ();
@@ -264,28 +261,26 @@ impl Config for XcmConfig {
 	type Aliasers = Nothing;
 }
 
-impl cumulus_pallet_parachain_system::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type OnSystemEvent = ();
-	type SelfParaId = ();
-	type OutboundXcmpMessageSource = XcmpQueue;
-	type DmpMessageHandler = ();
-	type ReservedDmpWeight = ();
-	type XcmpMessageHandler = XcmpQueue;
-	type ReservedXcmpWeight = ();
-	type CheckAssociatedRelayNumber = AnyRelayNumber;
+pub struct ChannelInfo;
+impl GetChannelInfo for ChannelInfo {
+	fn get_channel_status(_id: ParaId) -> ChannelStatus {
+		ChannelStatus::Ready(10, 10)
+	}
+	fn get_channel_max(_id: ParaId) -> Option<usize> {
+		Some(usize::max_value())
+	}
 }
 
 impl cumulus_pallet_xcmp_queue::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type XcmExecutor = XcmExecutor<XcmConfig>;
-	type ChannelInfo = ParachainSystem;
+	type ChannelInfo = ChannelInfo;
 	type VersionWrapper = ();
 	type ExecuteOverweightOrigin = EnsureRoot<AccountId>;
 	type ControllerOrigin = EnsureRoot<AccountId>;
 	type ControllerOriginConverter = XcmOriginToCallOrigin;
 	type WeightInfo = ();
-	type PriceForSiblingDelivery = NoPriceForMessageDelivery<ParaId>;
+	type PriceForSiblingDelivery = ();
 }
 
 impl cumulus_pallet_dmp_queue::Config for Runtime {
@@ -402,7 +397,6 @@ construct_runtime!(
 		Balances: pallet_balances,
 
 		ParachainInfo: parachain_info,
-		ParachainSystem: cumulus_pallet_parachain_system,
 		XcmpQueue: cumulus_pallet_xcmp_queue,
 		DmpQueue: cumulus_pallet_dmp_queue,
 		CumulusXcm: cumulus_pallet_xcm,
