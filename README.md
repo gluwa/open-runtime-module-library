@@ -36,6 +36,8 @@ The Open Runtime Module Library (ORML) is a community maintained collection of S
     -   This pallet allows users to create secure reversible payments that keep funds locked in a merchant’s account until the off-chain goods are confirmed to be received. Each payment gets assigned its own judge that can help resolve any disputes between the two parties.
 -   [tokens](https://github.com/open-web3-stack/open-runtime-module-library/tree/master/tokens)
     -   Implements fungible tokens pallet with compatibility with Substrate tokens abstractions
+-   [vesting](https://github.com/open-web3-stack/open-runtime-module-library/tree/master/vesting)
+    -   Provides scheduled balance locking mechanism, in a _graded vesting_ way.
 
 #### XCM
 
