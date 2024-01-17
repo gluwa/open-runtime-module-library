@@ -12,7 +12,6 @@ members = [
 	"tokens/runtime-api",
 	"traits",
 	"utilities",
-	"vesting",
 	"rewards",
 	"nft",
 	"xcm",
@@ -44,7 +43,6 @@ pallet-session = { git = "https://github.com/gluwa/polkadot-sdk", branch = "rele
 pallet-staking = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
 pallet-timestamp = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
 pallet-treasury = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
-pallet-vesting = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
 pallet-transaction-payment = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
 sc-client-api = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
 sc-client-db = { git = "https://github.com/gluwa/polkadot-sdk", branch = "release-polkadot-v1.1.0-patch" }
